@@ -180,6 +180,8 @@ class DeviceStatus(dict):
 			# charging state info, so assume the level is unchanged.
 			level = self.get(KEYS.BATTERY_LEVEL)
 		else:
+			if level == 0 and status == "full":
+				level = 100
 			assert isinstance(level, int)
 
 		# TODO: this is also executed when pressing Fn+F7 on K800.

@@ -202,9 +202,7 @@ def _process_hidpp10_notification(device, status, n):
 def _process_feature_notification(device, status, n, feature):
 	if feature == _F.BATTERY_STATUS:
 		if n.address == 0x00:
-			discharge = ord(n.data[:1])
-			battery_status = ord(n.data[1:2])
-			status.set_battery_info(discharge, _hidpp20.BATTERY_STATUS[battery_status])
+			status.read_battery()
 		else:
 			_log.warn("%s: unknown BATTERY %s", device, n)
 		return True

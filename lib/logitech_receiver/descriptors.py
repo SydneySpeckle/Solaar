@@ -215,11 +215,18 @@ _D('Wireless Illuminated Keyboard K800', protocol=1.0, wpid='2010',
 							_RS.hand_detection(),
 						],
 				)
-_D('Illuminated Living-Room Keyboard K830', protocol=2.0, wpid='4032',
+_D('Illuminated Living-Room Keyboard K830', protocol=2.0, wpid='404C',
 				settings=[
 							_FS.new_fn_swap()
 						],
 				)
+_D('Wireless Keyboard Craft', protocol=2.0, wpid='4066',
+				settings=[
+							_FS.new_fn_swap(),
+							_FS.fn_swap(),
+						],
+				)
+
 
 # Mice
 
@@ -318,7 +325,7 @@ _D('Performance Mouse MX', codename='Performance MX', protocol=1.0, wpid='101A',
 
 _D('Wireless Mouse MX Master', codename='MX Master', protocol=4.5, wpid='4041')
 
-_D('Wireless Mouse MX Master 2S', codename='MX Master 2S', protocol=4.5,wpid='4069',
+_D('Wireless Mouse MX Master 2S', codename='MX Master 2S', protocol=2.0,wpid='4069',
 				settings=[
 							_FS.hires_smooth_invert(),
 							_FS.hires_smooth_resolution(),

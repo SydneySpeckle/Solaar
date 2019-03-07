@@ -615,18 +615,21 @@ def _update_device_panel(device, panel, buttons, full=False):
 		panel._battery._text.set_sensitive(True)
 		panel._battery._text.set_markup('<small>%s</small>' % _("unknown"))
 	else:
+		battery_status = device.status.get(_K.BATTERY_STATUS)
+		bat_full = battery_status == 'full'
 		charging = device.status.get(_K.BATTERY_CHARGING)
-		icon_name = _icons.battery(battery_level, charging)
+		icon_name = _icons.battery(battery_level, charging, bat_full)
 		panel._battery._icon.set_from_icon_name(icon_name, _INFO_ICON_SIZE)
 		panel._battery._icon.set_sensitive(True)
-
-		if isinstance(battery_level, _NamedInt):
-			text = _(str(battery_level))
+		if not charging and battery_level != 0:
+			if isinstance(battery_level, _NamedInt):
+				text = _(str(battery_level))
+			else:
+				text = _("%(battery_percent)d%%") % { 'battery_percent': battery_level }
 		else:
-			text = _("%(battery_percent)d%%") % { 'battery_percent': battery_level }
+			text = ""
 		if is_online:
-			if charging:
-				text += ' <small>(%s)</small>' % _("charging")
+			text += ' <small>(%s)</small>' % (battery_status)
 		else:
 			text += ' <small>(%s)</small>' % _("last known")
 		panel._battery._text.set_sensitive(is_online)
@@ -801,6 +804,8 @@ def update(device, need_popup=False):
 			_model.set_value(item, _COLUMN.ACTIVE, is_online)
 
 			battery_level = device.status.get(_K.BATTERY_LEVEL)
+			battery_status = device.status.get(_K.BATTERY_STATUS)
+			charging = device.status.get(_K.BATTERY_CHARGING)
 			if battery_level is None:
 				_model.set_value(item, _COLUMN.STATUS_TEXT, _CAN_SET_ROW_NONE)
 				_model.set_value(item, _COLUMN.STATUS_ICON, _CAN_SET_ROW_NONE)
@@ -808,11 +813,16 @@ def update(device, need_popup=False):
 				if isinstance(battery_level, _NamedInt):
 					status_text = _("%(battery_level)s") % { 'battery_level': _(str(battery_level)) }
 				else:
-					status_text = _("%(battery_percent)d%%") % { 'battery_percent': battery_level }
+					if battery_level == 0 and charging:
+						status_text = _("%(battery_level)s") % { 'battery_level': _(str(battery_status)) }
+					else:
+						status_text = _("%(battery_percent)d%%") % { 'battery_percent': battery_level }
 				_model.set_value(item, _COLUMN.STATUS_TEXT, status_text)
 
 				charging = device.status.get(_K.BATTERY_CHARGING)
-				icon_name = _icons.battery(battery_level, charging)
+				bat_full = device.status.get(_K.BATTERY_STATUS) == "full"
+				icon_name = _icons.battery(battery_level, charging, bat_full)
+				# icon_name = _icons.battery(battery_level, charging)
 				_model.set_value(item, _COLUMN.STATUS_ICON, icon_name)
 
 			if selected_device_id is None or need_popup:

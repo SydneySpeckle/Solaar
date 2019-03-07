@@ -23,12 +23,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import gettext as _gettext
 
-
-try:
-	unicode
-	_ = lambda x: _gettext.gettext(x).decode('UTF-8')
-except:
-	_ = _gettext.gettext
+def _(x):
+	try:
+		unicode
+		return _gettext.gettext(x).decode('UTF-8')
+	except:
+		return _gettext.gettext(x)
 
 
 # A few common strings, not always accessible as such in the code.

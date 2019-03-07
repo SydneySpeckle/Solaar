@@ -454,11 +454,16 @@ def get_battery(device):
 	:raises FeatureNotSupported: if the device does not support this feature.
 	"""
 	battery = feature_request(device, FEATURE.BATTERY_STATUS)
+	# out = [elem.encode('hex') for elem in battery]
+	# _log.debug("Raw Data: device: {}, {} type: {} len: {}".format(device, out, type(battery), len(battery)))
 	if battery:
 		discharge, dischargeNext, status = _unpack('!BBB', battery[:3])
 		if _log.isEnabledFor(_DEBUG):
 			_log.debug("device %d battery %d%% charged, next level %d%% charge, status %d = %s",
 						device.number, discharge, dischargeNext, status, BATTERY_STATUS[status])
+		# fix 100% if battery fully charged
+		if discharge == 0x5a:
+			discharge = 0x64
 		return discharge, BATTERY_STATUS[status]
 
 

@@ -57,8 +57,9 @@ _gettext.bindtextdomain(_LOCALE_DOMAIN, path)
 _gettext.textdomain(_LOCALE_DOMAIN)
 _gettext.install(_LOCALE_DOMAIN)
 
-try:
-	unicode
-	_ = lambda x: _gettext.gettext(x).decode('UTF-8')
-except:
-	_ = _gettext.gettext
+def _(x):
+	try:
+		unicode
+		return _gettext.gettext(x).decode('UTF-8')
+	except:
+		return _gettext.gettext(x)

@@ -137,13 +137,18 @@ def _print_device(dev):
 			from logitech_receiver.common import NamedInt as _NamedInt
 			level, status = battery
 			if level is not None:
+				if level == 0 and status == "full":
+					level = 100
 				if isinstance(level, _NamedInt):
 					text = str(level)
 				else:
 					text = '%d%%' % level
 			else:
 				text = 'N/A'
-			print ('     Battery: %s, %s.' % (text, status))
+			if level == 0 and status == "recharging":
+				print ('     Battery: %s.' % (status))
+			else:
+				print ('     Battery: %s, %s.' % (text, status))
 		else:
 			print ('     Battery status unavailable.')
 	else:
